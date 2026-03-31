@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lilac Institute OS</title>
+<style>
+body {
+    background-color: #111;
+    color: #0f0;
+    font-family: monospace;
+    padding: 20px;
+}
+input {
+    background: #111;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font-family: monospace;
+    padding: 5px;
+}
+button {
+    background: #111;
+    color: #0f0;
+    border: 1px solid #0f0;
+    font-family: monospace;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+#consoleLog {
+    display: none;
+    margin-top: 20px;
+    white-space: pre;
+}
+#errorText {
+    color: #f00;
+    display: none;
+    margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<h1>Lilac Institute OS Login</h1>
+<p>Enter credentials to access the system:</p>
+<label>Username: <input type="text" id="usernameInput"></label><br><br>
+<label>Password: <input type="password" id="passwordInput"></label><br><br>
+<button id="loginButton">Login</button>
+<p id="errorText">Access Denied.</p>
 
+<div id="consoleLog">
+  _     _ _              ___           _        ___  ____  
+ | |   (_) | __ _  ___  |_ _|_ __  ___| |_     / _ \/ ___| 
+ | |   | | |/ _` |/ __|  | || '_ \/ __| __|   | | | \___ \ 
+ | |___| | | (_| | (__   | || | | \__ \ |_ _  | |_| |___) |
+ |_____|_|_|\__,_|\___| |___|_| |_|___/\__(_)  \___/|____/ 
+
+WAIT...  Compiling
+DONE...  Compiled successfully in 912ms
+
+[USER INTERFACE]  Lilac Institute OS EST. 2013
+\\ USERNAME: Cinclair
+\\ PASSWORD: P05!
+
+WAIT...  Checking Database
+DONE...  Data match found successfully in 59ms
+```````````````````````````````````````````````````````````````````
+Doctor T. Cinclair
+Access Level: 01
+Admin Permission: NO
+SYS KEY: 76434-95910
+
+This workbench is approved by Lilac Institute EST. 2013
+```````````````````````````````````````````````````````````````````
+</div>
+
+<script>
+const users = {
+    "Cinclair": {
+        password: "P05!"
+    },
+   "Admin1234": {
+        password: "1234"
+    }
+};
+
+document.getElementById("loginButton").addEventListener("click", () => {
+    const username = document.getElementById("usernameInput").value;
+    const password = document.getElementById("passwordInput").value;
+    const errorText = document.getElementById("errorText");
+    const consoleLog = document.getElementById("consoleLog");
+
+    if(users[username] && users[username].password === password){
+        consoleLog.style.display = "block";
+        errorText.style.display = "none";
+    } else {
+        errorText.style.display = "block";
+        consoleLog.style.display = "none";
+    }
+});
+</script>
+</body>
+</html>
