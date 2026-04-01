@@ -2,99 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Lilac Institute OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lilac Institute Terminal</title>
 <style>
 body {
-    background-color: #111;
-    color: #0f0;
+    margin: 0;
+    height: 100vh;
+    background-color: #000; /* black like Apple II */
+    color: #00FF00; /* classic green */
     font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#terminalContainer {
+    width: 90%;
+    max-width: 800px;
+    background-color: #000;
     padding: 20px;
-}
-input {
-    background: #111;
-    color: #0f0;
-    border: 1px solid #0f0;
-    font-family: monospace;
-    padding: 5px;
-}
-button {
-    background: #111;
-    color: #0f0;
-    border: 1px solid #0f0;
-    font-family: monospace;
-    padding: 5px 10px;
-    cursor: pointer;
+    border: 2px solid #00FF00;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
 }
 #consoleLog {
-    display: none;
-    margin-top: 20px;
-    white-space: pre;
+    flex: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
 }
-#errorText {
-    color: #f00;
-    display: none;
-    margin-top: 10px;
+#commandLine {
+    display: flex;
+    margin-top: 5px;
+}
+#commandInput {
+    flex: 1;
+    background-color: #000;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 5px;
+    outline: none;
+}
+#commandInput::placeholder {
+    color: #00FF00aa;
+}
+button {
+    display: none; /* hidden, optional if we want enter only */
 }
 </style>
 </head>
 <body>
-<h1>Lilac Institute OS Login</h1>
-<p>Enter credentials to access the system:</p>
-<label>Username: <input type="text" id="usernameInput"></label><br><br>
-<label>Password: <input type="password" id="passwordInput"></label><br><br>
-<button id="loginButton">Login</button>
-<p id="errorText">Access Denied.</p>
 
-<div id="consoleLog">
-  _     _ _              ___           _        ___  ____  
- | |   (_) | __ _  ___  |_ _|_ __  ___| |_     / _ \/ ___| 
- | |   | | |/ _` |/ __|  | || '_ \/ __| __|   | | | \___ \ 
- | |___| | | (_| | (__   | || | | \__ \ |_ _  | |_| |___) |
- |_____|_|_|\__,_|\___| |___|_| |_|___/\__(_)  \___/|____/ 
-
-WAIT...  Compiling
-DONE...  Compiled successfully in 912ms
-
-[USER INTERFACE]  Lilac Institute OS EST. 2013
-\\ USERNAME: Cinclair
-\\ PASSWORD: P05!
-
-WAIT...  Checking Database
-DONE...  Data match found successfully in 59ms
-```````````````````````````````````````````````````````````````````
-Doctor T. Cinclair
-Access Level: 01
-Admin Permission: NO
-SYS KEY: 76434-95910
-
-This workbench is approved by Lilac Institute EST. 2013
-```````````````````````````````````````````````````````````````````
+<div id="terminalContainer">
+    <div id="consoleLog">LILAC INSTITUTE TERMINAL ONLINE\nType 'help' for commands.\n</div>
+    <div id="commandLine">
+        <span>&gt; </span>
+        <input type="text" id="commandInput" placeholder="Enter command..." autofocus>
+    </div>
 </div>
 
 <script>
-const users = {
-    "Cinclair": {
-        password: "P05!"
+// Modular commands system
+const commands = {
+    help: () => {
+        return "Available commands:\nhelp - show this message\nclear - clear console\nsecret - reveal hidden message";
     },
-   "Admin1234": {
-        password: "1234"
+    clear: () => {
+        document.getElementById('consoleLog').textContent = "LILAC INSTITUTE TERMINAL ONLINE\nType 'help' for commands.\n";
+        return '';
+    },
+    secret: () => {
+        return ">>> SECRET MODULE UNLOCKED: CLUES ARCHIVE ONLINE <<<";
+    },
+    info: () => {
+        return "Lilac Institute Alpha Terminal v1.0\nExploring the Anomalous...";
     }
 };
 
-document.getElementById("loginButton").addEventListener("click", () => {
-    const username = document.getElementById("usernameInput").value;
-    const password = document.getElementById("passwordInput").value;
-    const errorText = document.getElementById("errorText");
-    const consoleLog = document.getElementById("consoleLog");
-
-    if(users[username] && users[username].password === password){
-        consoleLog.style.display = "block";
-        errorText.style.display = "none";
-    } else {
-        errorText.style.display = "block";
-        consoleLog.style.display = "none";
+// Handle command input
+document.getElementById('commandInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+        const input = this.value.trim();
+        const consoleLog = document.getElementById('consoleLog');
+        consoleLog.textContent += '\n> ' + input;
+        
+        if(commands[input.toLowerCase()]){
+            const output = commands[input.toLowerCase()]();
+            if(output) consoleLog.textContent += '\n' + output;
+        } else if(input !== ''){
+            consoleLog.textContent += '\n> Unknown command';
+        }
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+        this.value = '';
     }
 });
+
+// Optional: function to add new commands on the fly
+function addCommand(name, func){
+    commands[name.toLowerCase()] = func;
+}
+
+// Example dynamic addition
+addCommand('time', () => 'Current time: ' + new Date().toLocaleTimeString());
+
 </script>
 </body>
 </html>
